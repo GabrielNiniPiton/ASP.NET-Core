@@ -1,9 +1,13 @@
+using Dev_Piton.API.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.Configure<OpeningTimeOption>(builder.Configuration.GetSection("OpeningTime"));
+
+builder.Services.AddSingleton<ExampleClass>(e => new ExampleClass { Name = "Initial Stage" });
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
