@@ -4,7 +4,7 @@ namespace Dev_Piton.Core.Entities
 {
     public class Project : BaseEntity
     {
-        public Project(string? title, string? description, int idClient, int idFreelancer, decimal totalCost)
+        public Project(string title, string description, int idClient, int idFreelancer, decimal totalCost)
         {
             Title = title;
             Description = description;
@@ -17,8 +17,8 @@ namespace Dev_Piton.Core.Entities
             Comments = new List<ProjectComment>();
         }
 
-        public string? Title { get; private set; }
-        public string? Description { get; private set; }
+        public string Title { get; private set; }
+        public string Description { get; private set; }
         public int IdClient { get; private set; }
         public int IdFreelancer { get; private set; }
         public decimal TotalCost { get; private set; }
@@ -27,5 +27,38 @@ namespace Dev_Piton.Core.Entities
         public DateTime? FinishAt { get; private set; }
         public ProjectStatusEnum Status { get; private set; }
         public List<ProjectComment> Comments { get; private set; }
+
+        public void Cancel()
+        {
+            if (Status == ProjectStatusEnum.InProgress)
+            {
+                Status = ProjectStatusEnum.Cancelled;
+            }
+        }
+
+        public void Start()
+        {
+            if (Status == ProjectStatusEnum.Created)
+            {
+                Status = ProjectStatusEnum.InProgress;
+                FinishAt = DateTime.Now;
+            }
+        }
+
+        public void Finish()
+        {
+            if (Status == ProjectStatusEnum.InProgress)
+            {
+                Status = ProjectStatusEnum.Finished;
+                StartedAt = DateTime.Now;
+            }
+        }
+
+        public void Update(string title, string description, decimal totalCost)
+        {
+            Title = title;
+            Description = description;
+            TotalCost = totalCost;
+        }
     }
 }

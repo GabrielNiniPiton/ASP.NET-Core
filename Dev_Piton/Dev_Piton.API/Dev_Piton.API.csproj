@@ -12,7 +12,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Dev_Piton.Application\Dev_Piton.Application.csproj" />
     <ProjectReference Include="..\Dev_Piton.Core\Dev_Piton.Core.csproj" />
+    <ProjectReference Include="..\Dev_Piton.Infrastructure\Dev_Piton.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

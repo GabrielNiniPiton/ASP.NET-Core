@@ -1,9 +1,16 @@
 using Dev_Piton.API.Models;
+using Dev_Piton.Application.Services.Implementations;
+using Dev_Piton.Application.Services.Interfaces;
+using Dev_Piton.Infrastructure.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.Configure<OpeningTimeOption>(builder.Configuration.GetSection("OpeningTime"));
+
+builder.Services.AddSingleton<DevFreelaDbContext>();
+
+builder.Services.AddScoped<IProjectService, ProjectService>();
 
 builder.Services.AddSingleton<ExampleClass>(e => new ExampleClass { Name = "Initial Stage" });
 

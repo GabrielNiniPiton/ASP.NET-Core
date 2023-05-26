@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dev_Piton.Core", "Dev_Piton
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dev_Piton.Infrastructure", "Dev_Piton.Infrastructure\Dev_Piton.Infrastructure.csproj", "{0D5D3E64-9E98-4830-9195-14C20A382040}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dev_Piton.Application", "Dev_Piton.Application\Dev_Piton.Application.csproj", "{667517A9-0A75-4615-BA41-DB74548F1235}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{0D5D3E64-9E98-4830-9195-14C20A382040}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D5D3E64-9E98-4830-9195-14C20A382040}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D5D3E64-9E98-4830-9195-14C20A382040}.Release|Any CPU.Build.0 = Release|Any CPU
+		{667517A9-0A75-4615-BA41-DB74548F1235}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{667517A9-0A75-4615-BA41-DB74548F1235}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{667517A9-0A75-4615-BA41-DB74548F1235}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{667517A9-0A75-4615-BA41-DB74548F1235}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
