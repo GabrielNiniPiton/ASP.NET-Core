@@ -2,15 +2,19 @@ using Dev_Piton.API.Models;
 using Dev_Piton.Application.Services.Implementations;
 using Dev_Piton.Application.Services.Interfaces;
 using Dev_Piton.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.Configure<OpeningTimeOption>(builder.Configuration.GetSection("OpeningTime"));
 
-builder.Services.AddSingleton<DevFreelaDbContext>();
+var connectionString = builder.Configuration.GetConnectionString("DevPiton");
+builder.Services.AddDbContext<DevFreelaDbContext>(o => o.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IProjectService, ProjectService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ISkillService, SkillService>();
 
 builder.Services.AddSingleton<ExampleClass>(e => new ExampleClass { Name = "Initial Stage" });
 

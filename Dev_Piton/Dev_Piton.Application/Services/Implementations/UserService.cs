@@ -1,11 +1,12 @@
 ﻿using Dev_Piton.Application.InputModels;
+using Dev_Piton.Application.Services.Interfaces;
 using Dev_Piton.Application.ViewModels;
 using Dev_Piton.Core.Entities;
 using Dev_Piton.Infrastructure.Persistence;
 
 namespace Dev_Piton.Application.Services.Implementations
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private readonly DevFreelaDbContext _dbContext;
 
@@ -19,6 +20,8 @@ namespace Dev_Piton.Application.Services.Implementations
             var user = new User(inputModel.FullName, inputModel.Email, inputModel.BirthDate);
 
             _dbContext.Users.Add(user);
+
+            _dbContext.SaveChanges();
 
             return user.Id;
         }

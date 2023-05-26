@@ -1,18 +1,24 @@
-﻿using Dev_Piton.Application.InputModels;
+﻿using Dapper;
+using Dev_Piton.Application.InputModels;
 using Dev_Piton.Application.Services.Interfaces;
 using Dev_Piton.Application.ViewModels;
 using Dev_Piton.Core.Entities;
 using Dev_Piton.Infrastructure.Persistence;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 namespace Dev_Piton.Application.Services.Implementations
 {
     public class ProjectService : IProjectService
     {
         private readonly DevFreelaDbContext _dbContext;
+        private readonly string _connectionString;
 
-        public ProjectService(DevFreelaDbContext dbContext)
+        public ProjectService(DevFreelaDbContext dbContext, IConfiguration configuration)
         {
             _dbContext = dbContext;
+            _connectionString = configuration.GetConnectionString("DevPiton");
         }
 
         public int Create(NewProjectInputModel inputModel)
@@ -25,6 +31,8 @@ namespace Dev_Piton.Application.Services.Implementations
 
             _dbContext.Projects.Add(project);
 
+            _dbContext.SaveChanges();
+
             return project.Id;
         }
 
@@ -35,6 +43,8 @@ namespace Dev_Piton.Application.Services.Implementations
                                              inputModel.IdUser);
 
             _dbContext.ProjectComments.Add(comment);
+
+            _dbContext.SaveChanges();
         }
 
         public void Delete(int id)
@@ -42,6 +52,8 @@ namespace Dev_Piton.Application.Services.Implementations
             var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
 
             project.Cancel();
+
+            _dbContext.SaveChanges();
         }
 
         public void Finish(int id)
@@ -49,6 +61,8 @@ namespace Dev_Piton.Application.Services.Implementations
             var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
 
             project.Finish();
+
+            _dbContext.SaveChanges();
         }
 
         public List<ProjectViewModel> GetAll(string query)
@@ -62,7 +76,9 @@ namespace Dev_Piton.Application.Services.Implementations
 
         public ProjectDetailsViewModel GetById(int id)
         {
-            var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
+            var project = _dbContext.Projects.Include(p => p.Client)
+                                             .Include(p => p.Freelancer)
+                                             .SingleOrDefault(p => p.Id == id);
 
             if (project == null) return null;
 
@@ -71,7 +87,9 @@ namespace Dev_Piton.Application.Services.Implementations
                                                                       project.Description,
                                                                       project.TotalCost,
                                                                       project.StartedAt,
-                                                                      project.FinishAt);
+                                                                      project.FinishAt,
+                                                                      project.Client.FullName,
+                                                                      project.Freelancer.FullName);
 
             return projectDetailsViewModel;
         }
@@ -81,6 +99,17 @@ namespace Dev_Piton.Application.Services.Implementations
             var project = _dbContext.Projects.SingleOrDefault(p => p.Id == id);
 
             project.Start();
+
+            //_dbContext.SaveChanges();
+
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                sqlConnection.Open();
+
+                var script = "UPDATE Projects Set Status = @status, StartedAt = @startedat WHERE Od = @id";
+
+                sqlConnection.Execute(script, new { status = project.Status, startedat = project.StartedAt, id });
+            }
         }
 
         public void Update(UpdateProjectInputModel inputModel)
@@ -90,6 +119,8 @@ namespace Dev_Piton.Application.Services.Implementations
             project.Update(inputModel.Title,
                            inputModel.Description,
                            inputModel.TotalCost);
+
+            _dbContext.SaveChanges();
         }
     }
 }
